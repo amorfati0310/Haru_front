@@ -42,61 +42,6 @@
     </router-link>
     <ul class="main__contents">
 
-      <!-- <li class="main__contents-item">
-        <a class="main__contents-link" href="#">
-          <img class="main__contents-item-img" src="../images/1.andreas-p-30199.jpg" alt="Some image" />
-          <h3 class="main__contents-item-title">Castle in the twilight</h3>
-        </a>
-      </li>
-      <li class="main__contents-item">
-        <a class="main__contents-link" href="#">
-          <img class="main__contents-item-img" src="../images/2.chuttersnap-193788.jpg" alt="Some image" />
-          <h3 class="main__contents-item-title">Natural saturation effects</h3>
-        </a>
-      </li>
-      <li class="main__contents-item">
-        <a class="main__contents-link" href="#">
-          <img class="main__contents-item-img" src="../images/3.darius-soodmand-116253.jpg" alt="Some image" />
-          <h3 class="main__contents-item-title">Tip of iceberg</h3>
-        </a>
-      </li>
-      <li class="main__contents-item">
-        <a class="main__contents-link" href="#">
-          <img class="main__contents-item-img" src="../images/4.miguel-mateo-212333.jpg" alt="Some image" />
-          <h3 class="main__contents-item-title">Run on the hill</h3>
-        </a>
-      </li>
-      <li class="main__contents-item">
-        <a class="main__contents-link" href="#">
-          <img class="main__contents-item-img" src="../images/6.alejandra-quiroz-658.jpg" alt="Some image" />
-          <h3 class="main__contents-item-title">A tired day</h3>
-        </a>
-      </li>
-      <li class="main__contents-item">
-        <a class="main__contents-link" href="#">
-          <img class="main__contents-item-img" src="../images/7.averie-woodard-111822.jpg" alt="Some image" />
-          <h3 class="main__contents-item-title">A tired day</h3>
-        </a>
-      </li>
-      <li class="main__contents-item">
-        <a class="main__contents-link" href="#">
-          <img class="main__contents-item-img" src="../images/10.gabor-juhasz-68424.jpg" alt="Some image" />
-          <h3 class="main__contents-item-title">Into the forest</h3>
-        </a>
-      </li>
-      <li class="main__contents-item">
-        <a class="main__contents-link" href="#">
-          <img class="main__contents-item-img" src="../images/12.jonatan-pie-234237.jpg" alt="Some image" />
-          <h3 class="main__contents-item-title">It's so beautiful.</h3>
-        </a>
-      </li>
-      <li class="main__contents-item">
-        <a class="main__contents-link" href="#">
-          <img class="main__contents-item-img" src="../images/19.samuel-zeller-157390.jpg" alt="Some image" />
-          <h3 class="main__contents-item-title">Early adopters</h3>
-        </a>
-      </li>-->
-
       <li v-for="data in posts" class="main__contents-item">
         <a @click.prevent="Detail(data.id)" class="main__contents-link" href="#">
           <img class="main__contents-item-img NewOnes" :src=data.image alt="Some image" />
@@ -258,22 +203,24 @@ beforeCreate() {
    console.log('응답:',response.data.results[0].id);
    _this.$store.userID = response.data.results[0].id;
    console.log('스토어에 아이디 값 저장하기!!!!!',_this.$store.userID)
+
+   axios.get('/post/', {
+    //  headers: {
+    //    'Authorization': 'Token ' + this.$store.token
+    //  }
+   })
+  .then(function (response) {
+    // console.log("요거는 요거는 데이터 서버에서 온 데이터", response);
+    console.log('post response : ', response);
+    _this.$store.haruinfo = response.data.results;
+    _this.posts = response.data.results;
+    _this.$data.temp = response.data.results;
+    // console.log('_this.$store:',  _this.$store);
+    // console.log("첫 번째 데이터 ",_this.$store.haruinfo);
+  })
  });
 
- axios.get('/post/', {
-  //  headers: {
-  //    'Authorization': 'Token ' + this.$store.token
-  //  }
- })
-.then(function (response) {
-  // console.log("요거는 요거는 데이터 서버에서 온 데이터", response);
-  console.log('post response : ', response);
-  _this.posts = response.data.results;
-  _this.$store.haruinfo = response.data.results;
-  _this.$data.temp = response.data.results;
-  // console.log('_this.$store:',  _this.$store);
-  // console.log("첫 번째 데이터 ",_this.$store.haruinfo);
-})
+
 
 }
 }

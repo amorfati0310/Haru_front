@@ -15,7 +15,7 @@
               <button @click="removeImage" class="pa img-upload-cancel-btn">Remove image</button>
             </div>
             <progress v-show="Show" value="0" max="100" id="uploader">0%</progress>
-        </div>
+          </div>
           <!---######################### 텍스트 +감정영역 ###################-->
           <div class="write__textBox">
 
@@ -101,7 +101,7 @@ export default {
     },
     postHaru(){
 
-      var _this = this
+      var _this = this;
 
       // var userData = new FormData(this.$refs.form);
 
@@ -118,12 +118,15 @@ export default {
 
 
       axios.post('/post/', data , {
-        headers: {
-          'Authorization': 'Token ' + this.$store.token
-        }
+        // headers: {
+        //   'Authorization': 'Token ' + this.$store.token
+        // }
       })
       .then( function (response) {
+
+            console.log(response.data);
             _this.$store.haruinfo.push(response.data);
+
             console.log('_this.$store.haruinfo :',_this.$store.haruinfo)
             _this.$router.push('/home')
       });

@@ -58,7 +58,7 @@
             </div>
             <div class="modify__textBox">
 
-              <input class="modify__haru-title" type="text" name="title" placeholder="제목" v-model="haru_diary.title">
+              <input class="modify__haru-title" type="text" name="title" :placeholder=$store.detailData.title v-model="haru_diary.title">
               <div name="emotions" class="modify__emotions">
                 <input value = 1 title="기쁨" type="radio" name="status" v-model="haru_diary.status" class="modify__emotions-happy"><img src="../../images/emotions/happy.svg" alt="기쁨" width="25" height="25">
                 <input value = 2 title="그럭저럭" type="radio" name="status" v-model="haru_diary.status" class="modify__emotions-normal"><img src="../../images/emotions/normal.svg" alt="보통" width="25" height="25">
@@ -66,11 +66,13 @@
                 <input value = 4 title="짜증" type="radio" name="status" v-model="haru_diary.status" class="modify__emotions-rage"><img src="../../images/emotions/irritation.svg" alt="짜증" width="25" height="25">
                 <input value = 5 title="분노" type="radio" name="status" v-model="haru_diary.status" class="modify__emotions-angry"><img src="../../images/emotions/angry.svg" alt="분노" width="25" height="25">
               </div>
-              <textarea class="modify__haru-text" name="content" v-model="haru_diary.content" placeholder="내용"></textarea>
+              <textarea class="modify__haru-text" name="content" :placeholder=$store.detailData.content v-model="haru_diary.content" ></textarea>
             </div>
+            <button type="submit" name="button" class="modify__button" @click.prevent="ModifyHaru" >수정하기</button>
+            <span class="nowtime"></span>
           </form>
         </div>
-        <button class="modal-close" @click="gotoMain"></button>
+        <button class="modal-close" @click="gotoDetail"></button>
       </div>
     </div>
 
@@ -86,10 +88,10 @@ export default {
       ShowModify: false,
       haru_diary: {
         author: this.$store.userID,
-        title: '',
-        content: '',
-        status: '',
-        image: ''
+        title: this.$store.detailData.title,
+        content: this.$store.detailData.content,
+        status: this.$store.detailData.status,
+        image: this.$store.detailData.image
       },
       haruUrl:'',
       Show: false,
@@ -116,13 +118,40 @@ export default {
       this.ShowDetail = false;
       this.ShowModify = true;
       console.log('이미지 왜 못 가지고 오지?',this.$store.detailData.image);
+
+
     },
     ModifyHaru(){
 
+      console.log("수정하기 보내기");
+
+      var _this = this;
+
+
+
+      _this.haru_diary.status = Number(_this.haru_diary.status )
+
+      const edit_data = new FormData();
+    edit_data.append('author', this.$store.userID);
+    edit_data.append('title', _this.haru_diary.title);
+    edit_data.append('content', _this.haru_diary.content);
+    edit_data.append('status', _this.haru_diary.status);
+    edit_data.append('image', _this.haru_diary.image);
+
+
+
+
+      axios.patch("/post/"+_this.$store.postID+"/",edit_data,{
+
+    }).then(function(response){
+        console.log(response.data);
+        _this.$router.push('/home');
+    });
 
     },
-    gotoMain(){
-      this.$router.push('/home')
+    gotoDetail(){
+      this.ShowDetail = true;
+      this.ShowModify = false;
     },
     onFileChange(e) {
       var files = e.target.files || e.dataTransfer.files;
@@ -146,40 +175,7 @@ export default {
     },
     removeImage: function (e) {
       this.image = '';
-    },
-    postHaru(){
-
-      var _this = this;
-
-      // var userData = new FormData(this.$refs.form);
-
-      _this.haru_diary.status = Number(_this.haru_diary.status )
-
-
-
-      const data = new FormData();
-      data.append('author', this.$store.userID);
-      data.append('title', _this.haru_diary.title);
-      data.append('content', _this.haru_diary.content);
-      data.append('status', _this.haru_diary.status);
-      data.append('image', _this.haru_diary.image);
-
-
-      axios.post('/post/', data , {
-        // headers: {
-        //   'Authorization': 'Token ' + this.$store.token
-        // }
-      })
-      .then( function (response) {
-
-            console.log(response.data);
-            _this.$store.haruinfo.push(response.data);
-
-            console.log('_this.$store.haruinfo :',_this.$store.haruinfo)
-            _this.$router.push('/home')
-      });
-
-      }
+    }
   },
   mounted() {
     //일단 날짜 표시

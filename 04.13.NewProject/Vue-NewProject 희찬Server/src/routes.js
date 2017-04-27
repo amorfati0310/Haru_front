@@ -13,6 +13,6 @@ export const routes = [
   { path: '/Edit' ,component: Edit },
   {
     // * === wild card
-   path: '*', redirect: '/home'
+   path: '*', redirect: '/login'
   }
 ];
